@@ -7,16 +7,10 @@ public class AudioSettingsController : MonoBehaviour
     [Header("Audio Mixer")]
     [SerializeField] private AudioMixer _audioMixer;
 
-    [Header("Аудиоисточники")]
+    [Header("Фоновая музыка")]
     [SerializeField] private AudioSource _musicSource;
-    [SerializeField] private AudioSource _sfxSource1;
-    [SerializeField] private AudioSource _sfxSource2;
-    [SerializeField] private AudioSource _sfxSource3;
 
     [Header("Элементы UI")]
-    [SerializeField] private Button _button1;
-    [SerializeField] private Button _button2;
-    [SerializeField] private Button _button3;
     [SerializeField] private Toggle _masterMuteToggle;
     [SerializeField] private Slider _sfxVolumeSlider;
     [SerializeField] private Slider _musicVolumeSlider;
@@ -26,8 +20,23 @@ public class AudioSettingsController : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("=== AudioSettingsController запущен ===");
+        if (_masterMuteToggle != null)
+        {
+            _masterMuteToggle.isOn = false;
+            _masterMuteToggle.onValueChanged.AddListener(HandleMasterMuteChange);
+        }
 
+        PlayMusic();
+
+        SetupSlider(_sfxVolumeSlider);
+        SetupSlider(_musicVolumeSlider);
+        SetupSlider(_masterVolumeSlider);
+
+        UpdateAllVolumes(1f);
+    }
+
+    private void PlayMusic()
+    {
         if (_musicSource != null && _musicSource.clip != null)
         {
             _musicSource.loop = true;
@@ -35,55 +44,20 @@ public class AudioSettingsController : MonoBehaviour
             _musicSource.Play();
             Debug.Log("Фоновая музыка запущена");
         }
-
-        if (_button1 != null) 
-            _button1.onClick.AddListener(() => PlaySFX(_sfxSource1));
-
-        if (_button2 != null) 
-            _button2.onClick.AddListener(() => PlaySFX(_sfxSource2));
-
-        if (_button3 != null) 
-            _button3.onClick.AddListener(() => PlaySFX(_sfxSource3));
-
-        if (_masterMuteToggle != null)
+        else
         {
-            _masterMuteToggle.isOn = false;
-            _masterMuteToggle.onValueChanged.AddListener(HandleMasterMuteChange);
+            Debug.LogWarning("MusicSource или AudioClip не назначен!");
         }
-
-        if (_sfxVolumeSlider != null)
-        {
-            _sfxVolumeSlider.minValue = 0.0001f;
-            _sfxVolumeSlider.maxValue = 1f;
-            _sfxVolumeSlider.value = 1f;
-            _sfxVolumeSlider.onValueChanged.AddListener(UpdateAllVolumes);
-        }
-
-        if (_musicVolumeSlider != null)
-        {
-            _musicVolumeSlider.minValue = 0.0001f;
-            _musicVolumeSlider.maxValue = 1f;
-            _musicVolumeSlider.value = 1f;
-            _musicVolumeSlider.onValueChanged.AddListener(UpdateAllVolumes);
-        }
-
-        if (_masterVolumeSlider != null)
-        {
-            _masterVolumeSlider.minValue = 0.0001f;
-            _masterVolumeSlider.maxValue = 1f;
-            _masterVolumeSlider.value = 1f;
-            _masterVolumeSlider.onValueChanged.AddListener(UpdateAllVolumes);
-        }
-
-        UpdateAllVolumes(1f);
     }
 
-    private void PlaySFX(AudioSource source)
+    private void SetupSlider(Slider slider)
     {
-        if (source != null && source.clip != null)
+        if (slider != null)
         {
-            source.Play();
-            Debug.Log($"SFX проигран: {source.clip.name}");
+            slider.minValue = 0.0001f;
+            slider.maxValue = 1f;
+            slider.value = 1f;
+            slider.onValueChanged.AddListener(UpdateAllVolumes);
         }
     }
 
@@ -97,43 +71,38 @@ public class AudioSettingsController : MonoBehaviour
             {
                 _audioMixer.SetFloat("MasterVolume", -80f);
 
-                if (_sfxVolumeSlider != null) 
-                    _sfxVolumeSlider.interactable = false;
-
-                if (_musicVolumeSlider != null) 
-                    _musicVolumeSlider.interactable = false;
-
-                if (_masterVolumeSlider != null) 
-                    _masterVolumeSlider.interactable = false;
-
+                SetSlidersInteractable(false);
                 Debug.Log("🔇 Весь звук выключен (Master Volume = -80 dB)");
             }
             else
             {
                 _audioMixer.SetFloat("MasterVolume", 0f);
 
-                if (_sfxVolumeSlider != null) 
-                    _sfxVolumeSlider.interactable = true;
-
-                if (_musicVolumeSlider != null) 
-                    _musicVolumeSlider.interactable = true;
-
-                if (_masterVolumeSlider != null) 
-                    _masterVolumeSlider.interactable = true;
-
+                SetSlidersInteractable(true);
                 UpdateAllVolumes(0);
-
                 Debug.Log("🔊 Звук включен (Master Volume = 0 dB)");
             }
         }
     }
 
+    private void SetSlidersInteractable(bool interactable)
+    {
+        if (_sfxVolumeSlider != null)
+            _sfxVolumeSlider.interactable = interactable;
+
+        if (_musicVolumeSlider != null)
+            _musicVolumeSlider.interactable = interactable;
+
+        if (_masterVolumeSlider != null)
+            _masterVolumeSlider.interactable = interactable;
+    }
+
     private void UpdateAllVolumes(float _ = 0)
     {
-        if (_audioMixer == null) 
+        if (_audioMixer == null)
             return;
 
-        if (_isMuted) 
+        if (_isMuted)
             return;
 
         float sfx = _sfxVolumeSlider != null ? _sfxVolumeSlider.value : 1f;
@@ -154,7 +123,7 @@ public class AudioSettingsController : MonoBehaviour
 
     private float LinearToDecibel(float linear)
     {
-        if (linear <= 0f) 
+        if (linear <= 0f)
             return -80f;
 
         return Mathf.Log10(linear) * 20f;
