@@ -1642,18 +1642,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c304f301ef97740be6b167634ac2eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixer: {fileID: 24100000, guid: c90ac793a33a5dd499b5a4df3e2a9422, type: 2}
-  bgMusicSource: {fileID: 1805979569}
-  sfxSource1: {fileID: 1478236176}
-  sfxSource2: {fileID: 1260216085}
-  sfxSource3: {fileID: 1446155608}
-  button1: {fileID: 1156020655}
-  button2: {fileID: 1974819847}
-  button3: {fileID: 1044879790}
-  musicToggle: {fileID: 1963107161}
-  sfxSlider: {fileID: 1068116990}
-  musicSlider: {fileID: 1267029898}
-  masterSlider: {fileID: 1527113820}
+  _audioMixer: {fileID: 24100000, guid: c90ac793a33a5dd499b5a4df3e2a9422, type: 2}
+  _musicSource: {fileID: 1805979569}
+  _sfxSource1: {fileID: 1478236176}
+  _sfxSource2: {fileID: 1260216085}
+  _sfxSource3: {fileID: 1446155608}
+  _button1: {fileID: 1156020655}
+  _button2: {fileID: 1974819847}
+  _button3: {fileID: 1044879790}
+  _masterMuteToggle: {fileID: 1963107161}
+  _sfxVolumeSlider: {fileID: 1068116990}
+  _musicVolumeSlider: {fileID: 1267029898}
+  _masterVolumeSlider: {fileID: 1527113820}
 --- !u!4 &1452014130
 Transform:
   m_ObjectHideFlags: 0
@@ -2025,7 +2025,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!114 &1974819847 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6474945092115624599, guid: 3b5854f373400b44781807c9d9d79ea3, type: 3}

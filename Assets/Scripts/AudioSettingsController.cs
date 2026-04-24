@@ -1,78 +1,80 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
 public class AudioSettingsController : MonoBehaviour
 {
     [Header("Audio Mixer")]
-    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private AudioMixer _audioMixer;
 
-    [Header("Аудиоисточники")]
-    [SerializeField] private AudioSource bgMusicSource;
-    [SerializeField] private AudioSource sfxSource1;
-    [SerializeField] private AudioSource sfxSource2;
-    [SerializeField] private AudioSource sfxSource3;
+    [Header("РђСѓРґРёРѕРёСЃС‚РѕС‡РЅРёРєРё")]
+    [SerializeField] private AudioSource _musicSource;
+    [SerializeField] private AudioSource _sfxSource1;
+    [SerializeField] private AudioSource _sfxSource2;
+    [SerializeField] private AudioSource _sfxSource3;
 
-    [Header("Элементы UI")]
-    [SerializeField] private Button button1;
-    [SerializeField] private Button button2;
-    [SerializeField] private Button button3;
-    [SerializeField] private Toggle musicToggle;
-    [SerializeField] private Slider sfxSlider;
-    [SerializeField] private Slider musicSlider;
-    [SerializeField] private Slider masterSlider;
+    [Header("Р­Р»РµРјРµРЅС‚С‹ UI")]
+    [SerializeField] private Button _button1;
+    [SerializeField] private Button _button2;
+    [SerializeField] private Button _button3;
+    [SerializeField] private Toggle _masterMuteToggle;
+    [SerializeField] private Slider _sfxVolumeSlider;
+    [SerializeField] private Slider _musicVolumeSlider;
+    [SerializeField] private Slider _masterVolumeSlider;
+
+    private bool _isMuted = false;
 
     private void Start()
     {
-        Debug.Log("=== AudioSettingsController запущен ===");
+        Debug.Log("=== AudioSettingsController Р·Р°РїСѓС‰РµРЅ ===");
 
-        // Запуск фоновой музыки
-        if (bgMusicSource != null && bgMusicSource.clip != null)
+        if (_musicSource != null && _musicSource.clip != null)
         {
-            bgMusicSource.loop = true;
-            bgMusicSource.playOnAwake = false;
-            bgMusicSource.Play();
-            Debug.Log("Фоновая музыка запущена");
+            _musicSource.loop = true;
+            _musicSource.playOnAwake = false;
+            _musicSource.Play();
+            Debug.Log("Р¤РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓС‰РµРЅР°");
         }
 
-        // Привязка кнопок
-        if (button1 != null) button1.onClick.AddListener(() => PlaySFX(sfxSource1));
-        if (button2 != null) button2.onClick.AddListener(() => PlaySFX(sfxSource2));
-        if (button3 != null) button3.onClick.AddListener(() => PlaySFX(sfxSource3));
+        if (_button1 != null) 
+            _button1.onClick.AddListener(() => PlaySFX(_sfxSource1));
 
-        // Тоггл музыки
-        if (musicToggle != null)
+        if (_button2 != null) 
+            _button2.onClick.AddListener(() => PlaySFX(_sfxSource2));
+
+        if (_button3 != null) 
+            _button3.onClick.AddListener(() => PlaySFX(_sfxSource3));
+
+        if (_masterMuteToggle != null)
         {
-            musicToggle.isOn = true;
-            musicToggle.onValueChanged.AddListener(OnMusicToggleChanged);
+            _masterMuteToggle.isOn = false;
+            _masterMuteToggle.onValueChanged.AddListener(HandleMasterMuteChange);
         }
 
-        // Настройка слайдеров
-        if (sfxSlider != null)
+        if (_sfxVolumeSlider != null)
         {
-            sfxSlider.minValue = 0.0001f;
-            sfxSlider.maxValue = 1f;
-            sfxSlider.value = 1f;
-            sfxSlider.onValueChanged.AddListener(UpdateAllVolumes);
+            _sfxVolumeSlider.minValue = 0.0001f;
+            _sfxVolumeSlider.maxValue = 1f;
+            _sfxVolumeSlider.value = 1f;
+            _sfxVolumeSlider.onValueChanged.AddListener(UpdateAllVolumes);
         }
 
-        if (musicSlider != null)
+        if (_musicVolumeSlider != null)
         {
-            musicSlider.minValue = 0.0001f;
-            musicSlider.maxValue = 1f;
-            musicSlider.value = 1f;
-            musicSlider.onValueChanged.AddListener(UpdateAllVolumes);
+            _musicVolumeSlider.minValue = 0.0001f;
+            _musicVolumeSlider.maxValue = 1f;
+            _musicVolumeSlider.value = 1f;
+            _musicVolumeSlider.onValueChanged.AddListener(UpdateAllVolumes);
         }
 
-        if (masterSlider != null)
+        if (_masterVolumeSlider != null)
         {
-            masterSlider.minValue = 0.0001f;
-            masterSlider.maxValue = 1f;
-            masterSlider.value = 1f;
-            masterSlider.onValueChanged.AddListener(UpdateAllVolumes);
+            _masterVolumeSlider.minValue = 0.0001f;
+            _masterVolumeSlider.maxValue = 1f;
+            _masterVolumeSlider.value = 1f;
+            _masterVolumeSlider.onValueChanged.AddListener(UpdateAllVolumes);
         }
 
-        // Применяем начальные значения
         UpdateAllVolumes(1f);
     }
 
@@ -81,45 +83,80 @@ public class AudioSettingsController : MonoBehaviour
         if (source != null && source.clip != null)
         {
             source.Play();
-            Debug.Log($"SFX проигран: {source.clip.name}");
+            Debug.Log($"SFX РїСЂРѕРёРіСЂР°РЅ: {source.clip.name}");
         }
     }
 
-    private void OnMusicToggleChanged(bool isOn)
+    private void HandleMasterMuteChange(bool isOn)
     {
-        if (bgMusicSource != null)
+        _isMuted = isOn;
+
+        if (_audioMixer != null)
         {
-            bgMusicSource.mute = !isOn;
-            Debug.Log($"Музыка mute = {!isOn}");
+            if (_isMuted)
+            {
+                _audioMixer.SetFloat("MasterVolume", -80f);
+
+                if (_sfxVolumeSlider != null) 
+                    _sfxVolumeSlider.interactable = false;
+
+                if (_musicVolumeSlider != null) 
+                    _musicVolumeSlider.interactable = false;
+
+                if (_masterVolumeSlider != null) 
+                    _masterVolumeSlider.interactable = false;
+
+                Debug.Log("рџ”‡ Р’РµСЃСЊ Р·РІСѓРє РІС‹РєР»СЋС‡РµРЅ (Master Volume = -80 dB)");
+            }
+            else
+            {
+                _audioMixer.SetFloat("MasterVolume", 0f);
+
+                if (_sfxVolumeSlider != null) 
+                    _sfxVolumeSlider.interactable = true;
+
+                if (_musicVolumeSlider != null) 
+                    _musicVolumeSlider.interactable = true;
+
+                if (_masterVolumeSlider != null) 
+                    _masterVolumeSlider.interactable = true;
+
+                UpdateAllVolumes(0);
+
+                Debug.Log("рџ”Љ Р—РІСѓРє РІРєР»СЋС‡РµРЅ (Master Volume = 0 dB)");
+            }
         }
     }
 
     private void UpdateAllVolumes(float _ = 0)
     {
-        if (audioMixer == null) return;
+        if (_audioMixer == null) 
+            return;
 
-        float sfx = sfxSlider != null ? sfxSlider.value : 1f;
-        float music = musicSlider != null ? musicSlider.value : 1f;
-        float master = masterSlider != null ? masterSlider.value : 1f;
+        if (_isMuted) 
+            return;
 
-        // Итоговая громкость
+        float sfx = _sfxVolumeSlider != null ? _sfxVolumeSlider.value : 1f;
+        float music = _musicVolumeSlider != null ? _musicVolumeSlider.value : 1f;
+        float master = _masterVolumeSlider != null ? _masterVolumeSlider.value : 1f;
+
         float sfxLevel = sfx * master;
         float musicLevel = music * master;
 
-        // Конвертация в децибелы
         float sfxDB = LinearToDecibel(sfxLevel);
         float musicDB = LinearToDecibel(musicLevel);
 
-        // Применяем через миксер
-        audioMixer.SetFloat("SFXVolume", sfxDB);
-        audioMixer.SetFloat("MusicVolume", musicDB);
+        _audioMixer.SetFloat("SFXVolume", sfxDB);
+        _audioMixer.SetFloat("MusicVolume", musicDB);
 
-        Debug.Log($"Громкость: SFX={sfxDB:F1}dB, Music={musicDB:F1}dB");
+        Debug.Log($"Р“СЂРѕРјРєРѕСЃС‚СЊ: SFX={sfxDB:F1}dB, Music={musicDB:F1}dB");
     }
 
     private float LinearToDecibel(float linear)
     {
-        if (linear <= 0f) return -80f;
+        if (linear <= 0f) 
+            return -80f;
+
         return Mathf.Log10(linear) * 20f;
     }
 }
