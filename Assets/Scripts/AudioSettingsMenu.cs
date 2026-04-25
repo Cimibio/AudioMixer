@@ -28,6 +28,11 @@ public class AudioSettingsMenu : MonoBehaviour
         PlayMusic();
     }
 
+    private void OnDestroy()
+    {
+        _masterMuteToggle.onValueChanged.RemoveListener(ToggleMute);
+    }
+
     private void InitializeVolumeGroups()
     {
         foreach (var group in _volumeGroups)        

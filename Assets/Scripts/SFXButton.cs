@@ -19,19 +19,17 @@ public class SFXButton : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_button != null)        
-            _button.onClick.AddListener(PlaySFX);        
+        _button.onClick.AddListener(PlaySFX);
     }
 
     private void OnDisable()
     {
-        if (_button != null)        
-            _button.onClick.RemoveListener(PlaySFX);        
+        _button.onClick.RemoveListener(PlaySFX);
     }
 
     private void PlaySFX()
     {
-        if (_audioSource != null && _audioSource.clip != null)
+        if (_audioSource.clip != null)
         {
             _audioSource.Play();
             Debug.Log($"SFX проигран: {_audioSource.clip.name}");
