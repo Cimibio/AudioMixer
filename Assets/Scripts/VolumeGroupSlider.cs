@@ -10,8 +10,6 @@ public class VolumeGroupSlider : MonoBehaviour
 
     private Slider _slider;
     private AudioMixer _audioMixer;
-    //private float _masterVolume = 1f;
-    //private bool _isInitialized;
 
     private void Awake()
     {
@@ -22,20 +20,24 @@ public class VolumeGroupSlider : MonoBehaviour
 
         _slider.onValueChanged.RemoveAllListeners();
     }
+    private void OnDestroy()
+    {
+        if (_slider != null)
+            _slider.onValueChanged.RemoveListener(UpdateVolume);
+    }
 
     public void Initialize(AudioMixer mixer)
     {
         _audioMixer = mixer;
-        //_isInitialized = true;
 
         _slider.onValueChanged.AddListener(UpdateVolume);
         UpdateVolume(_slider.value); 
     }
 
-    private void OnDestroy()
+    public void SetInteractable(bool interactable)
     {
         if (_slider != null)
-            _slider.onValueChanged.RemoveListener(UpdateVolume);
+            _slider.interactable = interactable;
     }
 
     private void UpdateVolume(float value)
@@ -43,14 +45,8 @@ public class VolumeGroupSlider : MonoBehaviour
         if (_audioMixer == null) 
             return;
 
-        float db = LinearToDecibel(_slider.value);
+        float db = LinearToDecibel(value);
         _audioMixer.SetFloat(_exposedParameterName, db);
-    }
-
-    public void SetInteractable(bool interactable)
-    {
-        if (_slider != null)
-            _slider.interactable = interactable;
     }
 
     private float LinearToDecibel(float linear)
