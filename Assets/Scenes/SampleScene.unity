@@ -373,6 +373,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1403425135}
     m_Modifications:
+    - target: {fileID: 454940205850402465, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
+      propertyPath: _exposedParameterName
+      value: MasterVolume
+      objectReference: {fileID: 0}
     - target: {fileID: 2260103634162938822, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
       propertyPath: m_text
       value: Master Volume
@@ -707,17 +711,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2424253810761445242, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
   m_PrefabInstance: {fileID: 7787989962299177555}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1068116990 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3561050511822126683, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
-  m_PrefabInstance: {fileID: 7787989962299177555}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1128433891
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,6 +798,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1403425135}
     m_Modifications:
+    - target: {fileID: 454940205850402465, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
+      propertyPath: _exposedParameterName
+      value: MusicVolume
+      objectReference: {fileID: 0}
     - target: {fileID: 2260103634162938822, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
       propertyPath: m_text
       value: Music Volume
@@ -923,15 +920,15 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2424253810761445242, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
   m_PrefabInstance: {fileID: 1267029896}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1267029898 stripped
+--- !u!114 &1267029899 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3561050511822126683, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
+  m_CorrespondingSourceObject: {fileID: 454940205850402465, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
   m_PrefabInstance: {fileID: 1267029896}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 93afb16ce054d7641925a28f59278a91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1365859897
@@ -1264,18 +1261,19 @@ MonoBehaviour:
   _audioMixer: {fileID: 24100000, guid: c90ac793a33a5dd499b5a4df3e2a9422, type: 2}
   _musicSource: {fileID: 1805979569}
   _masterMuteToggle: {fileID: 1963107161}
-  _sfxVolumeSlider: {fileID: 1068116990}
-  _musicVolumeSlider: {fileID: 1267029898}
-  _masterVolumeSlider: {fileID: 1527113820}
---- !u!114 &1527113820 stripped
+  _volumeGroups:
+  - {fileID: 1715509798}
+  - {fileID: 1267029899}
+  - {fileID: 1904888800}
+--- !u!114 &1715509798 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3561050511822126683, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
-  m_PrefabInstance: {fileID: 700397977}
+  m_CorrespondingSourceObject: {fileID: 454940205850402465, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
+  m_PrefabInstance: {fileID: 7787989962299177555}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 93afb16ce054d7641925a28f59278a91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1805979567
@@ -1512,6 +1510,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8920722530507309158, guid: 3b5854f373400b44781807c9d9d79ea3, type: 3}
   m_PrefabInstance: {fileID: 1817350082}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1904888800 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 454940205850402465, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
+  m_PrefabInstance: {fileID: 700397977}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93afb16ce054d7641925a28f59278a91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1963107159
 GameObject:
   m_ObjectHideFlags: 0
@@ -1712,6 +1721,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1403425135}
     m_Modifications:
+    - target: {fileID: 454940205850402465, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
+      propertyPath: _exposedParameterName
+      value: SFXVolume
+      objectReference: {fileID: 0}
     - target: {fileID: 2260103634162938822, guid: e582e0f94eb8aed449a9a0833674fa19, type: 3}
       propertyPath: m_text
       value: SFX Volume
